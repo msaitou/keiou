@@ -1,0 +1,19 @@
+{
+  "name": "keiou",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "config": "^3.3.9",
+    "express": "^4.18.2",
+    "log4js": "^6.7.1",
+    "selenium-download": "^2.0.16",
+    "selenium-webdriver": "^4.7.1"
+  }
+}
