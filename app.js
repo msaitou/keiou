@@ -1,5 +1,6 @@
 const express = require("express");
 const fs = require("fs");
+const conf = require("config");
 const port = 3333;
 const app = express();
 /** ログクラスの初期処理
@@ -49,7 +50,15 @@ app.get("/", async (req, res) => {
     else preStr = fs.readFileSync("setting.json", "utf8");
     let setting = JSON.parse(preStr);
     // console.log(setting);
-    res.json({ data: setting });
+    res.json({ data: setting, conf: conf });
+  } catch (e) {
+    log.warn(e);
+    res.json({ err: "エラーが発生しました。もう一度試しても同様の場合、齊藤に連絡してください。" });
+  }
+});
+app.get("/conf", async (req, res) => {
+  try {
+    res.json({ conf: conf.defo_info });
   } catch (e) {
     log.warn(e);
     res.json({ err: "エラーが発生しました。もう一度試しても同様の場合、齊藤に連絡してください。" });

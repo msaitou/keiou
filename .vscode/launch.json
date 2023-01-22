@@ -1,0 +1,28 @@
+{
+    // IntelliSense を使用して利用可能な属性を学べます。
+    // 既存の属性の説明をホバーして表示します。
+    // 詳細情報は次を確認してください: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "プログラムの起動",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${file}"
+        }
+        ,
+        {
+            "runtimeExecutable": "C:\\Users\\msaito\\AppData\\Local\\fnm_multishells\\4180_1673583968497\\node.exe",
+            "name": "keiSele",
+            "program": "${workspaceFolder}/sele.js",
+            "request": "launch",
+            "skipFiles": ["<node_internals>/**"],
+            "type": "pwa-node",
+            "outputCapture": "std",
+            "args": [""]
+          },
+    ]
+}

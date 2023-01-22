@@ -9,7 +9,7 @@ function App() {
   const [account, setAccount] = useState([]);
   const [editFlag, setEditFlag] = useState(false);
   const [isRevealPassword, setIsRevealPassword] = useState(false);
-
+  var conf = {};
   const edit = () => {
     reqApi({ method: "GET", headers: { "Content-Type": "application/json" } }).then((res) => {
       console.log("data", res.data);
@@ -26,7 +26,7 @@ function App() {
   };
   const prev = () => setEditFlag(!editFlag);
   const togglePassword = () => setIsRevealPassword((prevState) => !prevState);
-  const getRideTime = () => ["5:57", "6:13", "6:36", "8:40", "9:06"];
+  const getRideTime = () => ["05:57", "06:13", "06:36", "08:40", "09:06"];
   const getTrainNum = () => {
     let trainNumList = [];
     for (let i = 1; i < 11; i++) {
@@ -43,6 +43,14 @@ function App() {
     }
     return seatNumList;
   };
+  function getYYYYMMDDStr(date) {
+    let d = date ? date : new Date();
+    let yyyymmddstr =
+      d.getFullYear().toString() +
+      (d.getMonth() + 1).toString().padStart(2, "0") +
+      d.getDate().toString().padStart(2, "0");
+    return yyyymmddstr;
+  }
   // console.log(window.location);
   var url = `http://${window.location.hostname}:3333/`;
   if (window.location.href.indexOf("https") > -1) {
@@ -58,12 +66,18 @@ function App() {
   };
   const createBookable = (data) => {
     let date = new Date();
-    date.setDate(date.getDate() + 7);
+    let bookDate = new Date();
+    date.setDate(date.getDate() + 7); // 一週間後以降の予約しか興味ない
+    date.setHours(0, 0, 0, 0);
+    bookDate.setHours(0, 0, 0, 0);
     let dateList = [];
     let tmpItems = [];
+    let defoItem = { time: conf.time, t_num: conf.t_num, s_num: conf.s_num };
     for (let i = 0; i < 14; i++) {
       date.setDate(date.getDate() + 1);
       if ([0, 6].indexOf(date.getDay()) > -1) continue;
+      let dateKey = getYYYYMMDDStr(date);
+      bookDate.setDate(bookDate.getDate() + 1);
       let dateStr = date.toLocaleDateString().substring(5);
       switch (date.getDay()) {
         case 1:
@@ -83,14 +97,16 @@ function App() {
           break;
       }
       dateList.push(dateStr);
-      // 以下　初期値（暫定　TODO）
-      let newItem = { date: dateStr, check: false, time: "6:36", t_num: "3号車", s_num: "12D" };
+      let newItem = {
+        date: dateStr,
+        date_key: dateKey,
+        book_date: bookDate.toLocaleDateString(),
+        check: false,
+        ...defoItem,
+      };
       if (data && data.items) {
         let saved = data.items.filter((it, e) => it.date == dateStr)[0];
-        if (saved) {
-          newItem = saved;
-          // newItem.check = newItem.check === "true" ? true : false;
-        }
+        if (saved) newItem = { ...newItem, ...saved };
       }
       tmpItems.push(newItem);
     }
@@ -114,13 +130,20 @@ function App() {
     setItems(tmpList);
   };
   useEffect(() => {
-    reqApi({ method: "GET", headers: { "Content-Type": "application/json" } }).then((res) => {
-      console.log("data", res.data);
-      createBookable(res.data);
-    });
-    reqApi({ method: "GET", headers: { "Content-Type": "application/json" } }, "?result=1").then((res) => {
-      console.log("data", res.data);
-      setBooking([...res.data.items.filter((it, i) => i > res.data.items.length - 6)]);
+    // conf
+    reqApi({ method: "GET", headers: { "Content-Type": "application/json" } }, "conf").then((res) => {
+      conf = res.conf;
+      console.log(conf);
+      // 予約予定
+      reqApi({ method: "GET", headers: { "Content-Type": "application/json" } }).then((res) => {
+        console.log("data", res.data);
+        createBookable(res.data);
+      });
+      // 予約結果
+      reqApi({ method: "GET", headers: { "Content-Type": "application/json" } }, "?result=1").then((res) => {
+        console.log("data", res.data);
+        setBooking([...res.data.items.filter((it, i) => i > res.data.items.length - 6)]);
+      });
     });
   }, [editFlag]);
   // なんか関数をかませてhtmlを描画すると変数（state）のバインドがされなくなる
@@ -133,7 +156,7 @@ function App() {
           設定の編集中です
         </div>
       </h2>
-      <div className="container" style={{ padding: "10px 20px", display: editFlag ? "none" : "block" }}>
+      <div className="container py-2 px-4" style={{ display: editFlag ? "none" : "block" }}>
         <div className="row py-2 justify-content-center">
           <div className="col-12 border-bottom border-dark mb-2">
             <div className="row justify-content-end">
@@ -144,18 +167,27 @@ function App() {
             </div>
           </div>
           <div className="col-12 mb-2">
+            <div className="row small">
+              <div className="col-3 text-nowrap">結果</div>
+              <div className="col-5 ">乗車日時</div>
+              <div className="col-4">車両座席</div>
+            </div>
+          </div>
+          <div className="col-12 mb-2">
             {booking
               .filter((it) => it.check)
               .map((item, i) => (
-                <div className="row pb-2 border-bottom justify-content-end" key={i}>
-                  <div className="col-2 px-1">
-                    <div>{item.result ? "成功" : "失敗"}</div>
-                  </div>
+                <div className="row py-1 border-bottom justify-content-end stripe-odd" key={i}>
                   <div className="col-3 px-1">
+                    <div className={item.recipt_num ? "text-success" : "text-danger"}>
+                      {item.recipt_num ? item.recipt_num : "失敗"}
+                    </div>
+                  </div>
+                  <div className="col-3 px-1 text-end">
                     <div>{item.date}</div>
                   </div>
-                  <div className="col-3 px-1">
-                    <div>{item.time}</div>
+                  <div className="col-2 px-0">
+                    <div>{item.time}発</div>
                   </div>
                   <div className="col-4 px-1">
                     <div>
@@ -180,15 +212,25 @@ function App() {
             </div>
           </div>
           <div className="col-12 mb-2">
+            <div className="row small">
+              <div className="col-3 text-nowrap">予約実行日</div>
+              <div className="col-5 ">乗車日時</div>
+              <div className="col-4">車両座席</div>
+            </div>
+          </div>
+          <div className="col-12 mb-2">
             {items
               .filter((it) => it.check)
               .map((item, i) => (
-                <div className="row pb-2 border-bottom justify-content-end" key={i}>
+                <div className="row py-1 border-bottom justify-content-end stripe-odd" key={i}>
                   <div className="col-3 px-1">
+                    <div>{item.book_date}</div>
+                  </div>
+                  <div className="col-3 px-1 text-end">
                     <div>{item.date}</div>
                   </div>
-                  <div className="col-3 px-1">
-                    <div>{item.time}</div>
+                  <div className="col-2 px-0">
+                    <div>{item.time}発</div>
                   </div>
                   <div className="col-4 px-1">
                     <div>
@@ -207,7 +249,7 @@ function App() {
           </div>
         </div>
       </div>
-      <div className="container" style={{ padding: "0px 20px", display: !editFlag ? "none" : "block" }}>
+      <div className="container pt-1 px-4" style={{ display: !editFlag ? "none" : "block" }}>
         <form>
           <div
             data-bs-toggle="collapse"
@@ -219,7 +261,7 @@ function App() {
             onClick={() => setOpen((open) => !open)}
           >
             アカウント
-            <span role="presentation" style={{ height: "0px", position: "relative", left: "250px", top: "0px" }}>
+            <span role="presentation" style={{ height: "0px", position: "relative", left: "240px", top: "0px" }}>
               {open ? <i className="fas fa-chevron-up" /> : <i className="fas fa-chevron-down" />}
             </span>
           </div>
@@ -288,7 +330,7 @@ function App() {
               </div>
             </div>
             <div className="pb-3">
-              <div className="row">
+              <div className="row small">
                 <div className="col-7 ">
                   <label htmlFor="id" className="col-form-label">
                     乗車日時<small> (平日only)</small>
@@ -314,15 +356,20 @@ function App() {
                           <input
                             className="form-check-input mt-0"
                             type="checkbox"
+                            id={"check" + i}
                             checked={item.check}
                             kind="check"
                             k={i}
                             onChange={changeItems}
                           />
                         </div>{" "}
-                        <span className="input-group-text border-0 bg-white px-1" style={{ width: "75px" }}>
+                        <label
+                          className="input-group-text border-0 bg-white px-1"
+                          style={{ width: "75px" }}
+                          htmlFor={"check" + i}
+                        >
                           {item.date}
-                        </span>
+                        </label>
                         <select className="form-select px-1" value={item.time} kind="time" k={i} onChange={changeItems}>
                           {getRideTime().map((time, i) => (
                             <option key={time} value={time}>

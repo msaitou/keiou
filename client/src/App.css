@@ -42,3 +42,6 @@
   left: 72px;
   top: -27px;
 }
+.stripe-odd:nth-child(odd) {
+  background-color:rgba(0, 0, 0, 0.05) ;
+}

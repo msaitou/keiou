@@ -4,3 +4,5 @@ config/default.json
 memo.txt
 setting.json
 result.json
+bin/*
+log/*
