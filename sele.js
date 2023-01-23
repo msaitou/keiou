@@ -64,7 +64,7 @@ class Analyzer extends BaseWebDriverWrapper {
     let reciptNum = "";
     try {
       if (!this.getDriver()) {
-        this.setDriver(await this.webDriver());
+        this.setDriver(await this.webDriver(false ,conf.chrome.headless));
       }
       await this.driver.get(`${this.baseUrl}`); // このページを解析
       let se = ["input[id*='userId']", "input[id*='password']", "input[id*='submit']"];
@@ -182,6 +182,7 @@ class Analyzer extends BaseWebDriverWrapper {
                   if (await this.isExistEle(se[0], true, 3000)) {
                     // ■■決済確認画面
                     let el = await this.getEle(se[0], 1000);
+                    // throw("test")
                     await this.clickEle(el, 1000); // 同意ボタン
                     if (await this.isExistEle(se[1], true, 3000)) {
                       let el = await this.getEle(se[1], 1000);

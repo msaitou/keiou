@@ -130,11 +130,7 @@ exports.initBrowserDriver = async function (isMob = false, headless = true) {
   chromeOptions.addArguments(`--profile-directory=${conf.chrome["profile"]}`);
   chromeOptions.addArguments("--disable-blink-features=AutomationControlled");
   chromeOptions.addArguments("--lang=en");
-  // アプリ外で操作したプロファイルでログイン中にし、アプリでそのプロファイルを利用する。
-  // アプリ外で、どのプロファイルを使うか、デフォルトどのプロファイルを使うのがいいか。
-  // アプリ内にプロファイルは保存しておきたい気がする。
-  // pexのクッキーでログインの期限ぽいもの　削除すればログインが切れた。期限を過去にするのは意味なかった。
-  // _pex_session
+  if (headless) chromeOptions.addArguments("--headless");
   let defoSer = null;
   try {
     defoSer = chrome.getDefaultService();
