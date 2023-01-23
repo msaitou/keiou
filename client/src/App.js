@@ -105,12 +105,12 @@ function App() {
         ...defoItem,
       };
       if (data && data.items) {
-        let saved = data.items.filter((it, e) => it.date == dateStr)[0];
+        let saved = data?.items?.filter((it, e) => it.date == dateStr)[0];
         if (saved) newItem = { ...newItem, ...saved };
       }
       tmpItems.push(newItem);
     }
-    setAccount({ id: data.account.id, password: data.account.password });
+    setAccount({ id: data?.account?.id, password: data?.account?.password });
     setItems(tmpItems);
     // console.log("items", tmpItems, items, dateList);
   };
@@ -141,7 +141,7 @@ function App() {
       });
       // 予約結果
       reqApi({ method: "GET", headers: { "Content-Type": "application/json" } }, "?result=1").then((res) => {
-        console.log("data", res.data);
+        console.log("data", res.data.items);
         setBooking([...res.data.items.filter((it, i) => i > res.data.items.length - 6)]);
       });
     });
