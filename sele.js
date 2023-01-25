@@ -62,6 +62,7 @@ class Analyzer extends BaseWebDriverWrapper {
   async exec(task, account) {
     this.logger.info("きた？", task, account);
     let reciptNum = "";
+    let fName = "";
     try {
       if (!this.getDriver()) {
         this.setDriver(await this.webDriver(false, conf.chrome.headless));
@@ -78,7 +79,11 @@ class Analyzer extends BaseWebDriverWrapper {
         await inputEle.clear();
         await inputEle.sendKeys(account.password);
         inputEle = await this.getEle(se[2], 500);
-        await this.clickEle(inputEle, 5000);
+        let startTime = new Date().setHours(conf.start_time.h, conf.start_time.m, conf.start_time.s, 0);
+        for (; startTime > new Date(); ) {
+          await this.sleep(startTime - new Date() > 10000 ? 1000 : 200);
+        }
+        await this.clickEle(inputEle, 1000);
         se = ["select[id*='jyoushaDate']", "select[id*='destination']", "#vacancyButton"];
         if (await this.isExistEle(se[0], true, 10000)) {
           // 乗車日選択
@@ -105,7 +110,7 @@ class Analyzer extends BaseWebDriverWrapper {
         if (await this.isExistEle(se[2], true, 5000)) {
           // 照会　上の条件で
           let el = await this.getEle(se[2], 5000);
-          await this.clickEle(el, 5000);
+          await this.clickEle(el, 1000);
           se = [
             "div.train:not(.saleEnd)",
             "div.stationInfo>div",
@@ -124,7 +129,7 @@ class Analyzer extends BaseWebDriverWrapper {
                   if (text.indexOf("高幡不動") > -1 && text.indexOf(task.time) > -1) {
                     let el2 = await this.getElesXFromEle(el0[j], se[2], 5000);
                     el2 = await this.getElesFromEle(el2[0], se[3]);
-                    await this.clickEle(el2[0], 5000); // ページ遷移
+                    await this.clickEle(el2[0], 1000); // ページ遷移
                     isBreak = true;
                     break;
                   }
@@ -150,7 +155,7 @@ class Analyzer extends BaseWebDriverWrapper {
             }
             if (await this.isExistEle(se[1], true, 5000)) {
               let el = await this.getEle(se[1], 5000);
-              await this.clickEle(el, 5000);
+              await this.clickEle(el, 1000);
               // ■■座席選択画面
               let regex = "(\\d+)号車";
               let matches = task.t_num.match(regex);
@@ -161,48 +166,57 @@ class Analyzer extends BaseWebDriverWrapper {
                 "input#submit",
                 "ancestor::td[@class='seat']",
               ];
-              if (await this.isExistEle(se[0], true, 5000)) {
-                let el = await this.getEle(se[0], 5000);
-                await this.clickEle(el, 5000);
+              if (num != "10") {
+                if (await this.isExistEle(se[0], true, 5000)) {
+                  let el = await this.getEle(se[0], 5000);
+                  await this.clickEle(el, 1000);
+                }
               }
               if (await this.isExistEle(se[1], true, 5000)) {
                 let els = await this.getEles(se[1], 5000);
+                let isFound = false;
                 for (let el1 of els) {
                   let seatNum = await el1.getText();
                   if (seatNum.trim() == task.s_num) {
+                    logger.info("見つかった！", task.s_num);
+                    isFound = true;
                     let el2 = await this.getElesXFromEle(el1, se[3], 5000);
-                    await this.clickEle(el2[0], 5000);
+                    await this.clickEle(el2[0], 1000);
                     break;
                   }
                 }
-                if (await this.isExistEle(se[2], true, 5000)) {
-                  let el = await this.getEle(se[2], 5000);
-                  await this.clickEle(el, 5000); // 遷移
-                  se = [
-                    "input[id*='agreement']",
-                    "input[type='password']",
-                    "input[id*='nextPaymentBtn']",
-                    "div.inputArea div.number",
-                  ];
-                  if (await this.isExistEle(se[0], true, 5000)) {
-                    // ■■決済確認画面
-                    let el = await this.getEle(se[0], 5000);
-                    // throw("test")
-                    await this.clickEle(el, 5000); // 同意ボタン
-                    if (await this.isExistEle(se[1], true, 5000)) {
-                      let el = await this.getEle(se[1], 5000);
-                      await el.clear();
-                      await el.sendKeys(account.password); // 確認用のパスワード入力
-                      if (await this.isExistEle(se[2], true, 5000)) {
-                        let el = await this.getEle(se[2], 5000);
-                        await this.clickEle(el, 1000); // 遷移
-                        if (await this.isExistEle(se[3], true, 5000)) {
-                          let el = await this.getEle(se[3], 5000);
-                          reciptNum = await el.getText();
+                if (isFound) {
+                  if (await this.isExistEle(se[2], true, 5000)) {
+                    let el = await this.getEle(se[2], 5000);
+                    await this.clickEle(el, 1000); // 遷移
+                    se = [
+                      "input[id*='agreement']",
+                      "input[type='password']",
+                      "input[id*='nextPaymentBtn']",
+                      "div.inputArea div.number",
+                    ];
+                    if (await this.isExistEle(se[0], true, 5000)) {
+                      // ■■決済確認画面
+                      let el = await this.getEle(se[0], 5000);
+                      // throw("test")
+                      await this.clickEle(el, 5000); // 同意ボタン
+                      if (await this.isExistEle(se[1], true, 5000)) {
+                        let el = await this.getEle(se[1], 5000);
+                        await el.clear();
+                        await el.sendKeys(account.password); // 確認用のパスワード入力
+                        if (await this.isExistEle(se[2], true, 5000)) {
+                          let el = await this.getEle(se[2], 5000);
+                          await this.clickEle(el, 1000); // 遷移
+                          if (await this.isExistEle(se[3], true, 5000)) {
+                            let el = await this.getEle(se[3], 5000);
+                            reciptNum = await el.getText();
+                          }
                         }
                       }
                     }
                   }
+                } else {
+                  throw "既に確保されちゃった！";
                 }
               }
             }
@@ -211,10 +225,16 @@ class Analyzer extends BaseWebDriverWrapper {
       }
     } catch (e) {
       this.logger.info(e);
+      let w = await this.driver.executeScript("return document.body.scrollWidth;");
+      let h = await this.driver.executeScript("return document.body.scrollHeight;");
+      this.logger.info(w, h);
+      await this.driver.manage().window().setRect({ width: w, height: h });
       let encodedString = await this.driver.takeScreenshot();
-      await fs.writeFileSync(`./log/${new Date().toJSON().replaceAll(":", "")}.png`, encodedString, "base64");
+      fName = `${new Date().toJSON().replaceAll(":", "")}.png`;
+      await fs.writeFileSync(`./log/${fName}`, encodedString, "base64");
     } finally {
       task.recipt_num = reciptNum;
+      if (fName) task.f_name = fName;
       let preStr = fs.readFileSync("./result.json", "utf8");
       let result = JSON.parse(preStr);
       result.items = [...result.items, { ...task, reciptNum: reciptNum }];
