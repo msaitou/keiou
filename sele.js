@@ -83,7 +83,7 @@ class Analyzer extends BaseWebDriverWrapper {
         for (; startTime > new Date(); ) {
           await this.sleep(startTime - new Date() > 10000 ? 1000 : 200);
         }
-        await this.clickEle(inputEle, 1000);
+        await this.clickEle(inputEle, 100);
         se = ["select[id*='jyoushaDate']", "select[id*='destination']", "#vacancyButton"];
         if (await this.isExistEle(se[0], true, 10000)) {
           // 乗車日選択
@@ -110,7 +110,7 @@ class Analyzer extends BaseWebDriverWrapper {
         if (await this.isExistEle(se[2], true, 5000)) {
           // 照会　上の条件で
           let el = await this.getEle(se[2], 5000);
-          await this.clickEle(el, 1000);
+          await this.clickEle(el, 100);
           se = [
             "div.train:not(.saleEnd)",
             "div.stationInfo>div",
@@ -129,7 +129,7 @@ class Analyzer extends BaseWebDriverWrapper {
                   if (text.indexOf("高幡不動") > -1 && text.indexOf(task.time) > -1) {
                     let el2 = await this.getElesXFromEle(el0[j], se[2], 5000);
                     el2 = await this.getElesFromEle(el2[0], se[3]);
-                    await this.clickEle(el2[0], 1000); // ページ遷移
+                    await this.clickEle(el2[0], 100); // ページ遷移
                     isBreak = true;
                     break;
                   }
@@ -155,7 +155,7 @@ class Analyzer extends BaseWebDriverWrapper {
             }
             if (await this.isExistEle(se[1], true, 5000)) {
               let el = await this.getEle(se[1], 5000);
-              await this.clickEle(el, 1000);
+              await this.clickEle(el, 100);
               // ■■座席選択画面
               let regex = "(\\d+)号車";
               let matches = task.t_num.match(regex);
@@ -169,7 +169,7 @@ class Analyzer extends BaseWebDriverWrapper {
               if (num != "10") {
                 if (await this.isExistEle(se[0], true, 5000)) {
                   let el = await this.getEle(se[0], 5000);
-                  await this.clickEle(el, 1000);
+                  await this.clickEle(el, 100);
                 }
               }
               if (await this.isExistEle(se[1], true, 5000)) {
@@ -181,14 +181,14 @@ class Analyzer extends BaseWebDriverWrapper {
                     logger.info("見つかった！", task.s_num);
                     isFound = true;
                     let el2 = await this.getElesXFromEle(el1, se[3], 5000);
-                    await this.clickEle(el2[0], 1000);
+                    await this.clickEle(el2[0], 100);
                     break;
                   }
                 }
                 if (isFound) {
                   if (await this.isExistEle(se[2], true, 5000)) {
                     let el = await this.getEle(se[2], 5000);
-                    await this.clickEle(el, 1000); // 遷移
+                    await this.clickEle(el, 100); // 遷移
                     se = [
                       "input[id*='agreement']",
                       "input[type='password']",

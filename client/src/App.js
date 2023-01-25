@@ -180,7 +180,18 @@ function App() {
                 <div className="row py-1 border-bottom justify-content-end stripe-odd" key={i}>
                   <div className="col-3 px-1">
                     <div className={item.recipt_num ? "text-success" : "text-danger"}>
-                      {item.recipt_num ? item.recipt_num : "失敗"}
+                      {item.recipt_num ? (
+                        item.recipt_num
+                      ) : item.f_name ? (
+                        <div>
+                          <span>失敗</span>
+                          <a href={`log/${item.f_name}`} target="_blank" rel="noreferrer">
+                            (の画像)
+                          </a>
+                        </div>
+                      ) : (
+                        "失敗"
+                      )}
                     </div>
                   </div>
                   <div className="col-3 px-1 text-end">
