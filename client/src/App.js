@@ -12,7 +12,7 @@ function App() {
   var conf = {};
   const edit = () => {
     reqApi({ method: "GET", headers: { "Content-Type": "application/json" } }).then((res) => {
-      console.log("data", res.data);
+      // console.log("data", res.data);
       createBookable(res.data);
       // あったらデフォ閉じる
       setOpen(!(res.data.account.id || res.data.account.password));
@@ -75,9 +75,9 @@ function App() {
     let defoItem = { time: conf.time, t_num: conf.t_num, s_num: conf.s_num };
     for (let i = 0; i < 14; i++) {
       date.setDate(date.getDate() + 1);
+      bookDate.setDate(bookDate.getDate() + 1);
       if ([0, 6].indexOf(date.getDay()) > -1) continue;
       let dateKey = getYYYYMMDDStr(date);
-      bookDate.setDate(bookDate.getDate() + 1);
       let dateStr = date.toLocaleDateString().substring(5);
       switch (date.getDay()) {
         case 1:
@@ -133,10 +133,10 @@ function App() {
     // conf
     reqApi({ method: "GET", headers: { "Content-Type": "application/json" } }, "conf").then((res) => {
       conf = res.conf;
-      console.log(conf);
+      // console.log(conf);
       // 予約予定
       reqApi({ method: "GET", headers: { "Content-Type": "application/json" } }).then((res) => {
-        console.log("data", res.data);
+        // console.log("data", res.data);
         createBookable(res.data);
       });
       // 予約結果
