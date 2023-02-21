@@ -8,6 +8,7 @@ function App() {
   const [booking, setBooking] = useState([]);
   const [account, setAccount] = useState([]);
   const [editFlag, setEditFlag] = useState(false);
+  const [rideTimeMap, setRideTimeMap] = useState({});
   const [isRevealPassword, setIsRevealPassword] = useState(false);
   var conf = {};
   const edit = () => {
@@ -26,7 +27,16 @@ function App() {
   };
   const prev = () => setEditFlag(!editFlag);
   const togglePassword = () => setIsRevealPassword((prevState) => !prevState);
-  const getRideTime = () => ["05:57", "06:13", "06:36", "08:40", "09:06"];
+  // const getRideTime = () => ["05:57", "06:13", "06:36", "08:40", "09:06"];
+  const getRideTime = (dateKey) => {
+    let list = [];
+    if (rideTimeMap) {
+      for (let key in rideTimeMap) {
+        if (dateKey > key) list = rideTimeMap[key];
+      }
+    }
+    return list;
+  };
   const getTrainNum = () => {
     let trainNumList = [];
     for (let i = 1; i < 11; i++) {
@@ -72,7 +82,8 @@ function App() {
     bookDate.setHours(0, 0, 0, 0);
     let dateList = [];
     let tmpItems = [];
-    let defoItem = { time: conf.time, t_num: conf.t_num, s_num: conf.s_num };
+    // let defoItem = { time: conf.time, t_num: conf.t_num, s_num: conf.s_num };
+    let defoItem = { ...conf.defo_info };
     for (let i = 0; i < 14; i++) {
       date.setDate(date.getDate() + 1);
       bookDate.setDate(bookDate.getDate() + 1);
@@ -133,6 +144,7 @@ function App() {
     // conf
     reqApi({ method: "GET", headers: { "Content-Type": "application/json" } }, "conf").then((res) => {
       conf = res.conf;
+      setRideTimeMap(conf.ride_time_map)
       // console.log(conf);
       // 予約予定
       reqApi({ method: "GET", headers: { "Content-Type": "application/json" } }).then((res) => {
@@ -382,7 +394,7 @@ function App() {
                           {item.date}
                         </label>
                         <select className="form-select px-1" value={item.time} kind="time" k={i} onChange={changeItems}>
-                          {getRideTime().map((time, i) => (
+                          {getRideTime(item.date_key).map((time, i) => (
                             <option key={time} value={time}>
                               {time}
                             </option>

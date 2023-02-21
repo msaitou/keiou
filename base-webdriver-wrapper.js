@@ -140,7 +140,7 @@ class BaseWebDriverWrapper {
         throw e;
       } else {
         try {
-          // await this.driver.navigate().refresh(); // 画面更新  しないとなにも起きない
+          await this.driver.navigate().refresh(); // 画面更新  しないとなにも起きない
         } catch (e) {
           this.logger.warn(e);
         }

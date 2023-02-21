@@ -32,7 +32,7 @@ app.get("/", async (req, res) => {
 });
 app.get("/conf", async (req, res) => {
   try {
-    res.json({ conf: conf.defo_info });
+    res.json({ conf: conf });
   } catch (e) {
     logger.warn(e);
     res.json({ err: "エラーが発生しました。もう一度試しても同様の場合、齊藤に連絡してください。" });

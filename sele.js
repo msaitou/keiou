@@ -195,25 +195,29 @@ class Analyzer extends BaseWebDriverWrapper {
                       "input[id*='nextPaymentBtn']",
                       "div.inputArea div.number",
                     ];
-                    if (await this.isExistEle(se[0], true, 5000)) {
+                    // for (let k=0;k<3;k++) {
+                    if (await this.isExistEle(se[0], true, 30000)) {
                       // ■■決済確認画面
-                      let el = await this.getEle(se[0], 5000);
-                      // throw("test")
+                      let el = await this.getEle(se[0], 30000);
                       await this.clickEle(el, 5000); // 同意ボタン
-                      if (await this.isExistEle(se[1], true, 5000)) {
-                        let el = await this.getEle(se[1], 5000);
+                      if (await this.isExistEle(se[1], true, 30000)) {
+                        let el = await this.getEle(se[1], 30000);
                         await el.clear();
                         await el.sendKeys(account.password); // 確認用のパスワード入力
-                        if (await this.isExistEle(se[2], true, 5000)) {
-                          let el = await this.getEle(se[2], 5000);
-                          await this.clickEle(el, 1000); // 遷移
-                          if (await this.isExistEle(se[3], true, 5000)) {
-                            let el = await this.getEle(se[3], 5000);
+                        if (await this.isExistEle(se[2], true, 30000)) {
+                          // throw("test")
+                          let el = await this.getEle(se[2], 30000);
+                          await this.clickEle(el, 5000); // 遷移
+                          if (await this.isExistEle(se[3], true, 30000)) {
+                            let el = await this.getEle(se[3], 30000);
                             reciptNum = await el.getText();
                           }
                         }
                       }
+                    } else {
+                      throw "時間がかかってる？";
                     }
+                    // }
                   }
                 } else {
                   throw "既に確保されちゃった！";

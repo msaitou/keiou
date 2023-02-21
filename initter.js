@@ -139,6 +139,7 @@ exports.initBrowserDriver = async function (isMob = false, headless = true) {
   chromeOptions.addArguments(`--profile-directory=${conf.chrome["profile"]}`);
   chromeOptions.addArguments("--disable-blink-features=AutomationControlled");
   chromeOptions.addArguments("--lang=en");
+  // if (headless) chromeOptions.addArguments("--headless=new");
   if (headless) chromeOptions.addArguments("--headless");
   let defoSer = null;
   try {
