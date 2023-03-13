@@ -241,7 +241,7 @@ class Analyzer extends BaseWebDriverWrapper {
       if (fName) task.f_name = fName;
       let preStr = fs.readFileSync("./result.json", "utf8");
       let result = JSON.parse(preStr);
-      result.items = [...result.items, { ...task, reciptNum: reciptNum }];
+      result.items = [...result.items, { ...task}];
       await fs.writeFileSync("./result.json", JSON.stringify(result));
       await this.quitDriver();
     }

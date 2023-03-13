@@ -16,14 +16,15 @@ function App() {
       // console.log("data", res.data);
       createBookable(res.data);
       // あったらデフォ閉じる
-      setOpen(!(res.data.account.id || res.data.account.password));
+      setOpen(!(res.data?.account?.id || res.data?.account?.password));
       setEditFlag(!editFlag);
     });
   };
   const save = () => {
     let saveData = { items: items.filter((it) => it.check), account };
-    reqApi({ method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(saveData) });
-    setEditFlag(!editFlag);
+    reqApi({ method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(saveData) }).then(()=>{
+      setEditFlag(!editFlag);
+    });
   };
   const prev = () => setEditFlag(!editFlag);
   const togglePassword = () => setIsRevealPassword((prevState) => !prevState);

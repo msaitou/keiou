@@ -7,3 +7,4 @@ result.json
 bin/*
 log/*
 client/build.tar.gz
+data/*
