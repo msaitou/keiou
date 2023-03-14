@@ -3,6 +3,7 @@ config/default.json
 /memo.txt
 memo.txt
 setting.json
+setting copy.json
 result.json
 bin/*
 log/*

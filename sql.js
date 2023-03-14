@@ -1,5 +1,6 @@
 const sqlite3 = require("sqlite3").verbose();
-const db = new sqlite3.Database("./data/keiou.db");
+const conf = require("config");
+const db = new sqlite3.Database(conf.db);
 const fs = require("fs");
 class sqliteDb {
   TB = {

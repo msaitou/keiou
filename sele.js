@@ -2,8 +2,9 @@ const logger = require("./initter.js").log();
 global.log = logger;
 logger.info("start!");
 logger.debug(process.argv);
-const db = require("./initter.js").db;
 const conf = require("config");
+const sqliteDb = require("./sql").sqliteDb;
+const db = new sqliteDb();
 const fs = require("fs");
 const { Builder, By, until, Select, Key } = require("selenium-webdriver");
 async function start() {
@@ -34,8 +35,12 @@ class WebCls {
     logger.info("こっちに来たね class版");
     try {
       // 自動予約設定ファイルを確認
-      let preStr = fs.readFileSync("setting.json", "utf8");
-      let setting = JSON.parse(preStr);
+      // let preStr = fs.readFileSync("setting.json", "utf8");
+      let preStr = { items: await db.select("ITEMS") };
+      let aca = await db.select("ACCOUNT");
+      preStr["account"] = aca[0];
+      // let setting = JSON.parse(preStr);
+      let setting = preStr;
       if (setting.items && setting.account) {
         let today = new Date();
         let task = setting.items.filter((it) => it.book_date == today.toLocaleDateString())[0];
@@ -205,7 +210,7 @@ class Analyzer extends BaseWebDriverWrapper {
                         await el.clear();
                         await el.sendKeys(account.password); // 確認用のパスワード入力
                         if (await this.isExistEle(se[2], true, 30000)) {
-                          // throw("test")
+                          throw("test")
                           let el = await this.getEle(se[2], 30000);
                           await this.clickEle(el, 5000); // 遷移
                           if (await this.isExistEle(se[3], true, 30000)) {
@@ -239,10 +244,13 @@ class Analyzer extends BaseWebDriverWrapper {
     } finally {
       task.recipt_num = reciptNum;
       if (fName) task.f_name = fName;
-      let preStr = fs.readFileSync("./result.json", "utf8");
-      let result = JSON.parse(preStr);
-      result.items = [...result.items, { ...task}];
-      await fs.writeFileSync("./result.json", JSON.stringify(result));
+      // let preStr = { items: await db.select("RESULTS") };
+      // let preStr = fs.readFileSync("./result.json", "utf8");
+      // let result = JSON.parse(preStr);
+      // let result = preStr;
+      // result.items = [...result.items, { ...task}];
+      await db.insert("RESULTS", [task]);
+      // await fs.writeFileSync("./result.json", JSON.stringify(result));
       await this.quitDriver();
     }
   }
