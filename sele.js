@@ -210,7 +210,7 @@ class Analyzer extends BaseWebDriverWrapper {
                         await el.clear();
                         await el.sendKeys(account.password); // 確認用のパスワード入力
                         if (await this.isExistEle(se[2], true, 30000)) {
-                          throw("test")
+                          // throw("test")
                           let el = await this.getEle(se[2], 30000);
                           await this.clickEle(el, 5000); // 遷移
                           if (await this.isExistEle(se[3], true, 30000)) {
