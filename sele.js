@@ -194,14 +194,15 @@ class Analyzer extends BaseWebDriverWrapper {
                   if (await this.isExistEle(se[2], true, 5000)) {
                     let el = await this.getEle(se[2], 5000);
                     await this.clickEle(el, 100); // 遷移
+                    // https://www.keio-ticketless.jp/keio-web/ticket/train_seat_allocated.xhtml
                     se = [
                       "input[id*='agreement']",
                       "input[type='password']",
                       "input[id*='nextPaymentBtn']",
                       "div.inputArea div.number",
                     ];
-                    // for (let k=0;k<3;k++) {
-                    if (await this.isExistEle(se[0], true, 30000)) {
+                    // for (let k = 0; k < 3; k++) {
+                    if (await this.isExistEle(se[0], true, 30000 * 4)) {
                       // ■■決済確認画面
                       let el = await this.getEle(se[0], 30000);
                       await this.clickEle(el, 5000); // 同意ボタン
@@ -216,6 +217,7 @@ class Analyzer extends BaseWebDriverWrapper {
                           if (await this.isExistEle(se[3], true, 30000)) {
                             let el = await this.getEle(se[3], 30000);
                             reciptNum = await el.getText();
+                            // break;
                           }
                         }
                       }
