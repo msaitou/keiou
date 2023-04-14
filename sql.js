@@ -96,11 +96,60 @@ async function main() {
   //   console.log("aa", aa);
   // }
 }
+async function main() {
+  // ファイルの読み込み
+  let strResult = fs.readFileSync("result.json", "utf8");
+  let strSetting = fs.readFileSync("setting.json", "utf8");
+  let preResult = JSON.parse(strResult);
+  preResult.items.forEach((p) => {
+    if (!("f_name" in p)) p["f_name"] = "";
+    delete p["reciptNum"];
+  });
+  let preSetting = JSON.parse(strSetting);
+  let dbc = new sqliteDb();
+  db.serialize(() => {
+    // アカウント
+    db.run(`create table if not exists aca(${dbc.TB.ACCOUNT.FIELD});`);
+    console.log(`insert into aca(${dbc.TB.ACCOUNT.FIELD}) values(${myValues(preSetting.account)});`);
+    db.run(`insert into aca(${dbc.TB.ACCOUNT.FIELD}) values(${myValues(preSetting.account)});`);
+    // 予約予定情報
+    db.run(`create table if not exists items(${dbc.TB.ITEMS.FIELD});`);
+    preSetting.items.forEach((item) => {
+      console.log(`insert into items(${dbc.TB.ITEMS.FIELD}) values(${myValues(item)})`);
+      db.run(`insert into items(${dbc.TB.ITEMS.FIELD}) values(${myValues(item)});`);
+    });
+    // 予約結果情報
+    db.run(`create table if not exists results(${dbc.TB.RESULTS.FIELD});`);
+    preResult.items.forEach((item) => {
+      console.log(`insert into results(${dbc.TB.RESULTS.FIELD}) values(${myValues(item)})`);
+      db.run(`insert into results(${dbc.TB.RESULTS.FIELD}) values(${myValues(item)});`);
+    });
+  });
+  // } else {
+  //   let aa = await select("ITEMS");
+  //   console.log("aa", aa);
+  // }
+}
+async function insert() {
+  // ファイルの読み込み
+  let dbc = new sqliteDb();
+  db.serialize(() => {
+    // アカウント
+    let sqlstr = `insert into items(${dbc.TB.ITEMS.FIELD}) values('4/21(月)','20230421','2023/4/14','1','06:13','10号車','11A');`;
+    console.log(sqlstr);
+    db.run(sqlstr);
+  });
+}
 const MODE = "migrate";
+const MODE2 = "insert";
 // console.log(process.argv);
 if (process.argv[1].indexOf("sql.js") > -1) {
   if (process.argv[2] && MODE == process.argv[2]) {
     main();
+    // process.exit();
+  } else
+  if (process.argv[2] && MODE2 == process.argv[2]) {
+    insert();
     // process.exit();
   } else {
     console.log(`引数は、${MODE} だけです！`);
