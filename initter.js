@@ -93,8 +93,8 @@ const thisLog = () => {
     },
   });
   // 古いファイルを削除してくれないので、自分で消す
-  // 2個残す。　logファイルがあるフォルダで、m.*.logを古い順にけす
-  const KEEP_NUM = 2;
+  // 10個残す。　logファイルがあるフォルダで、a.*.logを古い順にけす
+  const KEEP_NUM = 10;
   let files = fs.readdirSync(logPath);
   files = files.filter((f) => /^(a|m)\.\d{6}\.log$/.test(f)); // aかm.数字6桁.logという文字列をチェック
   let cnt = files.length;
