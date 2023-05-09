@@ -177,6 +177,7 @@ class Analyzer extends BaseWebDriverWrapper {
                         `#seatMap${num} td.seat>span:not(.noVacancySeat):not(.notSeat)`,
                         "input#submit",
                         "ancestor::td[@class='seat']",
+                        "[id$='selectedSeatList']",
                       ];
                       if (num != "10") {
                         if (await this.isExistEle(se[0], true, 5000)) {
@@ -193,8 +194,13 @@ class Analyzer extends BaseWebDriverWrapper {
                             logger.info("見つかった！", task.s_num);
                             isFound = true;
                             let el2 = await this.getElesXFromEle(el1, se[3], 5000);
-                            await this.clickEle(el2[0], 100);
-                            break;
+                            for (let k = 0; k < 5; k++) {
+                              await this.clickEle(el2[0], 100);
+                              if (await this.isExistEle(se[4], true, 2000)) {
+                                logger.info("選択されてるはず", task.s_num);
+                                break;
+                              }
+                            }
                           }
                         }
                         if (isFound) {
@@ -209,7 +215,7 @@ class Analyzer extends BaseWebDriverWrapper {
                               "div.inputArea div.number",
                             ];
                             // if (await this.isExistEle(se[0], true, 30000 * 4)) {
-                            if (await this.isExistEle(se[0], true, 30000)) {
+                            if (await this.isExistEle(se[0], true, 40000)) {
                               // ■■決済確認画面
                               let el = await this.getEle(se[0], 30000);
                               await this.clickEle(el, 5000); // 同意ボタン
