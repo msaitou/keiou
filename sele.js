@@ -246,8 +246,7 @@ class Analyzer extends BaseWebDriverWrapper {
                       )
                         throw e3; // バブリング
                       fName = await logedErr(this.driver, this.logger, e3);
-                      // 消す予定
-                      // await this.driver.navigate().refresh(); // 画面更新
+                      await this.driver.navigate().refresh(); // 更新
                       //"時間がかかってる？"時はこのURLなはず。だけどそうじゃないときがあるか。 "https://www.keio-ticketless.jp/keio-web/ticket/train_seat_assign.xhtml"
                     }
                   }
