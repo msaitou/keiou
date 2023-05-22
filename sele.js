@@ -198,6 +198,7 @@ class Analyzer extends BaseWebDriverWrapper {
                               await this.clickEle(el2[0], 100);
                               if (await this.isExistEle(se[4], true, 2000)) {
                                 logger.info("選択されてるはず", task.s_num);
+                                await logedErr(this.driver, this.logger, "debug1");
                                 break;
                               }
                             }
@@ -214,6 +215,7 @@ class Analyzer extends BaseWebDriverWrapper {
                               "input[id*='nextPaymentBtn']",
                               "div.inputArea div.number",
                             ];
+                            await logedErr(this.driver, this.logger, "debug2");
                             // if (await this.isExistEle(se[0], true, 30000 * 4)) {
                             if (await this.isExistEle(se[0], true, 40000)) {
                               // ■■決済確認画面
