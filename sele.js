@@ -165,7 +165,7 @@ class Analyzer extends BaseWebDriverWrapper {
                 if (await this.isExistEle(se[1], true, 2000)) {
                   let el = await this.getEle(se[1], 5000);
                   await this.clickEle(el, 100);
-                  for (let i3 = 0; i3 < 3 && reciptNum == ""; i3++) {
+                  for (let i3 = 0; i3 < 1 && reciptNum == ""; i3++) {
                     // ループポイント
                     try {
                       // ■■座席選択画面
@@ -217,7 +217,7 @@ class Analyzer extends BaseWebDriverWrapper {
                             ];
                             // await logedErr(this.driver, this.logger, "debug2");
                             // if (await this.isExistEle(se[0], true, 30000 * 4)) {
-                            if (await this.isExistEle(se[0], true, 60000)) {
+                            if (await this.isExistEle(se[0], true, 90000)) {
                               // ■■決済確認画面
                               let el = await this.getEle(se[0], 30000);
                               await this.clickEle(el, 5000); // 同意ボタン
