@@ -132,7 +132,7 @@ class BaseWebDriverWrapper {
     if (!this.isMob) await actions.move({ origin: ele }).perform();
     if (time >= 1000) await this.sleep(500);
     try {
-      await this.driver.manage().setTimeouts({ pageLoad: 10000 });
+      await this.driver.manage().setTimeouts({ pageLoad: 30000 });
       if (isEnter) await ele.sendKeys(Key.ENTER);
       else await ele.click();
     } catch (e) {
