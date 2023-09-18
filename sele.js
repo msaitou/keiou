@@ -77,7 +77,7 @@ class Analyzer extends BaseWebDriverWrapper {
         try {
           await this.driver.get(`${this.baseUrl}`); // このページを解析
           let se = ["input[id*='userId']", "input[id*='password']", "input[id*='submit']"];
-          if (await this.isExistEle(se[0], true, 5000)) {
+          if (await this.isExistEle(se[0], true, 10000)) {
             // アカウント入力
             let inputEle = await this.getEle(se[0], 100);
             await inputEle.clear();
@@ -255,7 +255,7 @@ class Analyzer extends BaseWebDriverWrapper {
                 } else throw "座席選択画面へのボタンが見つからない(2秒以上時間かかった)";
               }
             } else throw "照会ボタンが見つからない(2秒以上時間かかった)";
-          }
+          } else if (i2==2) throw "ログインページ表示されてる？";
         } catch (ee) {
           if (ee == "既に確保されちゃった！") throw ee; // バブリング
           fName = await logedErr(this.driver, this.logger, ee);
