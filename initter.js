@@ -151,6 +151,7 @@ exports.initBrowserDriver = async function (isMob = false, headless = true) {
   chromeOptions.addArguments(`--user-data-dir=${conf.chrome["user-data-dir"]}`);
   chromeOptions.addArguments(`--profile-directory=${conf.chrome["profile"]}`);
   chromeOptions.addArguments("--disable-blink-features=AutomationControlled");
+  if (conf.proxy.host && conf.proxy.port) chromeOptions.addArguments(`--proxy-server=http://${conf.proxy.host}:${conf.proxy.port}`);
   chromeOptions.addArguments("--lang=en");
   // if (headless) chromeOptions.addArguments("--headless=new");
   if (headless) chromeOptions.addArguments("--headless");
