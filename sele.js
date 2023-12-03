@@ -279,10 +279,15 @@ class Analyzer extends BaseWebDriverWrapper {
 }
 async function logedErr(driver, logger, e) {
   logger.info(e, await driver.getCurrentUrl());
-  let w = await driver.executeScript("return document.body.scrollWidth;");
-  let h = await driver.executeScript("return document.body.scrollHeight;");
-  logger.info(w, h);
-  await driver.manage().window().setRect({ width: w, height: h });
+  try {
+    let w = await driver.executeScript("return document.body.scrollWidth;");
+    let h = await driver.executeScript("return document.body.scrollHeight;");
+    logger.info(w, h);
+    await driver.manage().window().setRect({ width: w, height: h });
+  }
+  catch (ee) {
+    logger.info(e, ee);
+  }
   let encodedString = await driver.takeScreenshot();
   fName = `${new Date().toJSON().replaceAll(":", "")}.png`;
   await fs.writeFileSync(`./log/${fName}`, encodedString, "base64");
