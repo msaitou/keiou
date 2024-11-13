@@ -135,7 +135,7 @@ async function insert() {
   let dbc = new sqliteDb();
   db.serialize(() => {
     // アカウント
-    let sqlstr = `insert into items(${dbc.TB.ITEMS.FIELD}) values('4/21(月)','20230421','2023/4/14','1','06:13','10号車','11A');`;
+    let sqlstr = `insert into items(${dbc.TB.ITEMS.FIELD}) values('11/20(水)','20241120','2024/11/13','1','05:57','10号車','12D');`;
     console.log(sqlstr);
     db.run(sqlstr);
   });

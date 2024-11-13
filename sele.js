@@ -221,6 +221,17 @@ class Analyzer extends BaseWebDriverWrapper {
                               // ■■決済確認画面
                               let el = await this.getEle(se[0], 30000);
                               await this.clickEle(el, 5000); // 同意ボタン
+                              if (await this.isExistEle(se[2], true, 30000)) {
+                                // throw("test")
+                                let el = await this.getEle(se[2], 30000);
+                                await this.clickEle(el, 5000); // 遷移
+                                if (await this.isExistEle(se[3], true, 30000)) {
+                                  let el = await this.getEle(se[3], 30000);
+                                  reciptNum = await el.getText();
+                                  // break;
+                                } else throw "なんで？２";
+                              } else 
+
                               if (await this.isExistEle(se[1], true, 30000)) {
                                 let el = await this.getEle(se[1], 30000);
                                 await el.clear();
@@ -233,9 +244,10 @@ class Analyzer extends BaseWebDriverWrapper {
                                     let el = await this.getEle(se[3], 30000);
                                     reciptNum = await el.getText();
                                     // break;
-                                  }
-                                }
-                              }
+                                  } else throw "画面かわった？３";
+                                } else throw "画面かわった？２";
+                              } else throw "画面かわった？";
+
                             } else throw "時間がかかってる？";
                           }
                         } else throw "既に確保されちゃった！"; // これはループしても無駄
