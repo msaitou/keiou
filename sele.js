@@ -67,7 +67,8 @@ class Analyzer extends BaseWebDriverWrapper {
   async exec(task, account) {
     this.logger.info("きた？", task, account);
     let reciptNum = "";
-    let fName = "";
+    // let fName = "";
+    let fNameList = [];
     try {
       for (let i2 = 0; i2 < 3 && reciptNum == ""; i2++) {
         // ログインに時間がかかった時用のリトライ用
@@ -254,12 +255,17 @@ class Analyzer extends BaseWebDriverWrapper {
                       } else throw "選択する座席一覧が見つからない(5秒以上時間かかった)";
                     } catch (e3) {
                       let cUrl = await this.driver.getCurrentUrl();
+                      if (e3 =="なんで？２") {
+                        reciptNum = "時間かかったけどOK?";
+                      }
+                      else 
                       if (
                         e3 != "時間がかかってる？" ||
                         cUrl.indexOf("www.keio-ticketless.jp/keio-web/ticket/train_seat_assign.xhtml") === -1
                       )
                         throw e3; // バブリング
                       fName = await logedErr(this.driver, this.logger, e3);
+                      fNameList.push(fName);
                       await this.driver.navigate().refresh(); // 更新
                       //"時間がかかってる？"時はこのURLなはず。だけどそうじゃないときがあるか。 "https://www.keio-ticketless.jp/keio-web/ticket/train_seat_assign.xhtml"
                     }
@@ -271,13 +277,15 @@ class Analyzer extends BaseWebDriverWrapper {
         } catch (ee) {
           if (ee == "既に確保されちゃった！") throw ee; // バブリング
           fName = await logedErr(this.driver, this.logger, ee);
+          fNameList.push(fName);
         }
       }
     } catch (e) {
       fName = await logedErr(this.driver, this.logger, e);
+      fNameList.push(fName);
     } finally {
       task.recipt_num = reciptNum; // 予約できた印
-      if (!reciptNum && fName) task.f_name = fName;
+      if (!reciptNum && fName) task.f_name = fNameList.join(",");
       // let preStr = { items: await db.select("RESULTS") };
       // let preStr = fs.readFileSync("./result.json", "utf8");
       // let result = JSON.parse(preStr);

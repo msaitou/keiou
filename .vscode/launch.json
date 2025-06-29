@@ -5,16 +5,33 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "node",
+            "type": "chrome",
             "request": "launch",
-            "name": "プログラムの起動",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${file}"
-        }
-        ,
+            "name": "keiouChrome",
+            "url": "http://localhost", // デバッグしたいWebアプリケーションのURL
+            "webRoot": "${workspaceFolder}"
+        },
         {
+            "type": "chrome",
+            "request": "launch",
+            "name": "KeiouReact",
+            "url": "http://localhost:3000", // Reactアプリが起動するURL
+            "webRoot": "${workspaceFolder}/client", // clientディレクトリをwebRootに指定
+            "runtimeArgs": [
+                "--new-window" // 新しいウィンドウでChromeを開く（任意）
+            ],
+            "sourceMaps": true,
+            "breakOnLoad": true
+        },
+        {
+            "runtimeExecutable": "C:\\Users\\msaito\\AppData\\Local\\fnm_multishells\\4180_1673583968497\\node.exe",
+            "name": "keiouApp",
+            "program": "${workspaceFolder}/app.js",
+            "request": "launch",
+            "skipFiles": ["<node_internals>/**"],
+            "type": "pwa-node",
+            "webRoot": "${workspaceFolder}"
+        },        {
             "runtimeExecutable": "C:\\Users\\msaito\\AppData\\Local\\fnm_multishells\\4180_1673583968497\\node.exe",
             "name": "keiSele",
             "program": "${workspaceFolder}/sele.js",

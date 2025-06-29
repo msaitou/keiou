@@ -12,7 +12,10 @@ function App() {
   const [isRevealPassword, setIsRevealPassword] = useState(false);
   var conf = {};
   const edit = () => {
-    reqApi({ method: "GET", headers: { "Content-Type": "application/json" } }).then((res) => {
+    reqApi({
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    }).then((res) => {
       // console.log("data", res.data);
       createBookable(res.data);
       // あったらデフォ閉じる
@@ -22,7 +25,11 @@ function App() {
   };
   const save = () => {
     let saveData = { items: items.filter((it) => it.check), account };
-    reqApi({ method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(saveData) }).then(()=>{
+    reqApi({
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(saveData),
+    }).then(() => {
       setEditFlag(!editFlag);
     });
   };
@@ -143,19 +150,30 @@ function App() {
   };
   useEffect(() => {
     // conf
-    reqApi({ method: "GET", headers: { "Content-Type": "application/json" } }, "conf").then((res) => {
+    reqApi(
+      { method: "GET", headers: { "Content-Type": "application/json" } },
+      "conf"
+    ).then((res) => {
       conf = res.conf;
-      setRideTimeMap(conf.ride_time_map)
+      setRideTimeMap(conf.ride_time_map);
       // console.log(conf);
       // 予約予定
-      reqApi({ method: "GET", headers: { "Content-Type": "application/json" } }).then((res) => {
+      reqApi({
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      }).then((res) => {
         // console.log("data", res.data);
         createBookable(res.data);
       });
       // 予約結果
-      reqApi({ method: "GET", headers: { "Content-Type": "application/json" } }, "?result=1").then((res) => {
+      reqApi(
+        { method: "GET", headers: { "Content-Type": "application/json" } },
+        "?result=1"
+      ).then((res) => {
         console.log("data", res.data.items);
-        setBooking([...res.data.items.filter((it, i) => i > res.data.items.length - 6)]);
+        setBooking([
+          ...res.data.items.filter((it, i) => i > res.data.items.length - 6),
+        ]);
       });
     });
   }, [editFlag]);
@@ -165,16 +183,25 @@ function App() {
     <div className="App">
       <h2 className="bg-dark bg-gradient text-white p-2">
         京王ライナーを朝6時に自動で予約する設定画面
-        <div className="text-warning fs-6 fw-bold pt-1 mb-0" style={{ display: !editFlag ? "none" : "block" }}>
+        <div
+          className="text-warning fs-6 fw-bold pt-1 mb-0"
+          style={{ display: !editFlag ? "none" : "block" }}
+        >
           設定の編集中です
         </div>
       </h2>
-      <div className="container py-2 px-4" style={{ display: editFlag ? "none" : "block" }}>
+      <div
+        className="container py-2 px-4"
+        style={{ display: editFlag ? "none" : "block" }}
+      >
         <div className="row py-2 justify-content-center">
           <div className="col-12 border-bottom border-dark mb-2">
             <div className="row justify-content-end">
               <label className="label fw-bold col-4 mb-1">予約結果</label>
-              <small className="col-4 text-left text-secondary mb-1" style={{ paddingLeft: "0px" }}>
+              <small
+                className="col-4 text-left text-secondary mb-1"
+                style={{ paddingLeft: "0px" }}
+              >
                 ※最新の5件
               </small>
             </div>
@@ -190,17 +217,33 @@ function App() {
             {booking
               .filter((it) => it.check)
               .map((item, i) => (
-                <div className="row py-1 border-bottom justify-content-end stripe-odd" key={i}>
+                <div
+                  className="row py-1 border-bottom justify-content-end stripe-odd"
+                  key={i}
+                >
                   <div className="col-3 px-1">
-                    <div className={item.recipt_num ? "text-success" : "text-danger"}>
+                    <div
+                      className={
+                        item.recipt_num ? "text-success" : "text-danger"
+                      }
+                    >
                       {item.recipt_num ? (
                         item.recipt_num
                       ) : item.f_name ? (
                         <div>
-                          <span>失敗</span>
-                          <a href={`log/${item.f_name}`} target="_blank" rel="noreferrer">
-                            (の画像)
-                          </a>
+                          <span>失敗(</span>
+                          {item.f_name.split(",").map((file, i) => {
+                            return (
+                              <a
+                                href={`log/${file}`}
+                                target="_blank"
+                                rel="noreferrer"
+                              >
+                                {i === 0 ? "の画像1" : "、" + Number(i + 1)}
+                              </a>
+                            );
+                          })}
+                          )
                         </div>
                       ) : (
                         "失敗"
@@ -221,7 +264,10 @@ function App() {
                   </div>
                 </div>
               ))}{" "}
-            <div className="col-12 text-center" style={{ display: !items.length ? "block" : "none" }}>
+            <div
+              className="col-12 text-center"
+              style={{ display: !items.length ? "block" : "none" }}
+            >
               まだありません
             </div>{" "}
           </div>
@@ -230,7 +276,10 @@ function App() {
           <div className="col-12 border-bottom border-dark mb-2">
             <div className="row justify-content-end">
               <label className="label fw-bold col-4 mb-1">予約予定</label>
-              <button className="col-4 py-0 btn-sm btn btn-primary mb-1" onClick={edit}>
+              <button
+                className="col-4 py-0 btn-sm btn btn-primary mb-1"
+                onClick={edit}
+              >
                 編集
               </button>
             </div>
@@ -246,7 +295,10 @@ function App() {
             {items
               .filter((it) => it.check)
               .map((item, i) => (
-                <div className="row py-1 border-bottom justify-content-end stripe-odd" key={i}>
+                <div
+                  className="row py-1 border-bottom justify-content-end stripe-odd"
+                  key={i}
+                >
                   <div className="col-3 px-1">
                     <div>{item.book_date}</div>
                   </div>
@@ -266,14 +318,21 @@ function App() {
               ))}{" "}
             <div
               className="col-12 text-center"
-              style={{ display: !items.filter((it) => it.check).length ? "block" : "none" }}
+              style={{
+                display: !items.filter((it) => it.check).length
+                  ? "block"
+                  : "none",
+              }}
             >
               まだありません
             </div>
           </div>
         </div>
       </div>
-      <div className="container pt-1 px-4" style={{ display: !editFlag ? "none" : "block" }}>
+      <div
+        className="container pt-1 px-4"
+        style={{ display: !editFlag ? "none" : "block" }}
+      >
         <form>
           <div
             data-bs-toggle="collapse"
@@ -285,8 +344,20 @@ function App() {
             onClick={() => setOpen((open) => !open)}
           >
             アカウント
-            <span role="presentation" style={{ height: "0px", position: "relative", left: "240px", top: "0px" }}>
-              {open ? <i className="fas fa-chevron-up" /> : <i className="fas fa-chevron-down" />}
+            <span
+              role="presentation"
+              style={{
+                height: "0px",
+                position: "relative",
+                left: "240px",
+                top: "0px",
+              }}
+            >
+              {open ? (
+                <i className="fas fa-chevron-up" />
+              ) : (
+                <i className="fas fa-chevron-down" />
+              )}
             </span>
           </div>
           <div
@@ -298,7 +369,8 @@ function App() {
               // display: open ? "block" : "none",
               height: open ? "84px" : "0px",
               opacity: open ? 1 : 0,
-              transition: "0.3s height linear, 0.3s visibility linear, 0.3s opacity linear",
+              transition:
+                "0.3s height linear, 0.3s visibility linear, 0.3s opacity linear",
             }}
           >
             <div className="row">
@@ -333,8 +405,16 @@ function App() {
                   kind="password"
                   onChange={changeAccount}
                 />
-                <span onClick={togglePassword} role="presentation" className="PasswordReveal">
-                  {isRevealPassword ? <i className="fas fa-eye" /> : <i className="fas fa-eye-slash" />}
+                <span
+                  onClick={togglePassword}
+                  role="presentation"
+                  className="PasswordReveal"
+                >
+                  {isRevealPassword ? (
+                    <i className="fas fa-eye" />
+                  ) : (
+                    <i className="fas fa-eye-slash" />
+                  )}
                 </span>
               </div>
             </div>
@@ -394,7 +474,13 @@ function App() {
                         >
                           {item.date}
                         </label>
-                        <select className="form-select px-1" value={item.time} kind="time" k={i} onChange={changeItems}>
+                        <select
+                          className="form-select px-1"
+                          value={item.time}
+                          kind="time"
+                          k={i}
+                          onChange={changeItems}
+                        >
                           {getRideTime(item.date_key).map((time, i) => (
                             <option key={time} value={time}>
                               {time}
@@ -404,7 +490,13 @@ function App() {
                       </div>
                     </div>
                     <div className="col-3 px-1">
-                      <select className="form-select px-1" value={item.t_num} kind="t_num" k={i} onChange={changeItems}>
+                      <select
+                        className="form-select px-1"
+                        value={item.t_num}
+                        kind="t_num"
+                        k={i}
+                        onChange={changeItems}
+                      >
                         {getTrainNum().map((ｔNum, i) => (
                           <option key={ｔNum} value={ｔNum}>
                             {ｔNum}
@@ -413,7 +505,13 @@ function App() {
                       </select>
                     </div>
                     <div className="col-2 px-1">
-                      <select className="form-select px-1" value={item.s_num} kind="s_num" k={i} onChange={changeItems}>
+                      <select
+                        className="form-select px-1"
+                        value={item.s_num}
+                        kind="s_num"
+                        k={i}
+                        onChange={changeItems}
+                      >
                         {getSeatNum().map((sNum, i) => (
                           <option key={sNum} value={sNum}>
                             {sNum}
@@ -427,7 +525,10 @@ function App() {
             </div>
           </div>
         </form>
-        <button className="col-4 py-0 btn-sm btn btn-secondary me-4" onClick={prev}>
+        <button
+          className="col-4 py-0 btn-sm btn btn-secondary me-4"
+          onClick={prev}
+        >
           キャンセル
         </button>
         <button className="col-4 py-0 btn-sm btn btn-primary" onClick={save}>
