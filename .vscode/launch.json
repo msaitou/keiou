@@ -1,45 +1,46 @@
 {
-    // IntelliSense を使用して利用可能な属性を学べます。
-    // 既存の属性の説明をホバーして表示します。
-    // 詳細情報は次を確認してください: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "type": "chrome",
-            "request": "launch",
-            "name": "keiouChrome",
-            "url": "http://localhost", // デバッグしたいWebアプリケーションのURL
-            "webRoot": "${workspaceFolder}"
-        },
-        {
-            "type": "chrome",
-            "request": "launch",
-            "name": "KeiouReact",
-            "url": "http://localhost:3000", // Reactアプリが起動するURL
-            "webRoot": "${workspaceFolder}/client", // clientディレクトリをwebRootに指定
-            "runtimeArgs": [
-                "--new-window" // 新しいウィンドウでChromeを開く（任意）
-            ],
-            "sourceMaps": true,
-            "breakOnLoad": true
-        },
-        {
-            "runtimeExecutable": "C:\\Users\\msaito\\AppData\\Local\\fnm_multishells\\4180_1673583968497\\node.exe",
-            "name": "keiouApp",
-            "program": "${workspaceFolder}/app.js",
-            "request": "launch",
-            "skipFiles": ["<node_internals>/**"],
-            "type": "pwa-node",
-            "webRoot": "${workspaceFolder}"
-        },        {
-            "runtimeExecutable": "C:\\Users\\msaito\\AppData\\Local\\fnm_multishells\\4180_1673583968497\\node.exe",
-            "name": "keiSele",
-            "program": "${workspaceFolder}/sele.js",
-            "request": "launch",
-            "skipFiles": ["<node_internals>/**"],
-            "type": "pwa-node",
-            "outputCapture": "std",
-            "args": [""]
-          },
-    ]
+  // IntelliSense を使用して利用可能な属性を学べます。
+  // 既存の属性の説明をホバーして表示します。
+  // 詳細情報は次を確認してください: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "keiouChrome",
+      "url": "http://localhost", // デバッグしたいWebアプリケーションのURL
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "KeiouReact",
+      "url": "http://localhost:3000", // Reactアプリが起動するURL
+      "webRoot": "${workspaceFolder}/client", // clientディレクトリをwebRootに指定
+      "runtimeArgs": [
+        "--new-window" // 新しいウィンドウでChromeを開く（任意）
+      ],
+      "sourceMaps": true,
+      "breakOnLoad": true
+    },
+    {
+      "runtimeExecutable": "C:\\Users\\msaito\\AppData\\Local\\fnm_multishells\\4180_1673583968497\\node.exe",
+      "name": "keiouApp",
+      "program": "${workspaceFolder}/app.js",
+      "request": "launch",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "pwa-node",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "runtimeExecutable": "C:\\Users\\peter\\AppData\\Local\\Volta\\tools\\image\\node\\22.17.1\\node.exe", // volta which nodeで表示されるパス
+      "name": "keiSele",
+      "program": "${workspaceFolder}/sele.js",
+      "request": "launch",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "pwa-node",
+      "outputCapture": "std",
+      "args": [""]
+    }
+  ]
 }

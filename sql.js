@@ -6,9 +6,29 @@ class sqliteDb {
   TB = {
     NAME: { ACCOUNT: "aca", ITEMS: "items", RESULTS: "results" },
     ACCOUNT: { FIELD: ["id", "password"] },
-    ITEMS: { FIELD: ["date", "date_key", "book_date", "'check'", "time", "t_num", "s_num"] },
+    ITEMS: {
+      FIELD: [
+        "date",
+        "date_key",
+        "book_date",
+        "'check'",
+        "time",
+        "t_num",
+        "s_num",
+      ],
+    },
     RESULTS: {
-      FIELD: ["date", "date_key", "book_date", "'check'", "time", "t_num", "s_num", "recipt_num", "f_name"],
+      FIELD: [
+        "date",
+        "date_key",
+        "book_date",
+        "'check'",
+        "time",
+        "t_num",
+        "s_num",
+        "recipt_num",
+        "f_name",
+      ],
     },
   };
   constructor() {}
@@ -20,7 +40,9 @@ class sqliteDb {
           if (tblKey != "RESULTS") {
             // RESULTS以外
             db.run(`drop table if exists ${this.TB.NAME[tblKey]};`);
-            db.run(`create table if not exists ${this.TB.NAME[tblKey]}(${this.TB[tblKey].FIELD});`);
+            db.run(
+              `create table if not exists ${this.TB.NAME[tblKey]}(${this.TB[tblKey].FIELD});`
+            );
           }
           recs.forEach((rec, i) => {
             if (tblKey == "RESULTS") {
@@ -28,9 +50,15 @@ class sqliteDb {
               if (!("f_name" in rec)) rec["f_name"] = "";
               delete rec["reciptNum"];
             }
-            console.log(`insert into ${this.TB.NAME[tblKey]}(${this.TB[tblKey].FIELD}) values(${myValues(rec)})`);
+            console.log(
+              `insert into ${this.TB.NAME[tblKey]}(${
+                this.TB[tblKey].FIELD
+              }) values(${myValues(rec)})`
+            );
             db.run(
-              `insert into ${this.TB.NAME[tblKey]}(${this.TB[tblKey].FIELD}) values(${myValues(rec)});`,
+              `insert into ${this.TB.NAME[tblKey]}(${
+                this.TB[tblKey].FIELD
+              }) values(${myValues(rec)});`,
               [],
               () => {
                 if (i === recs.length - 1) resolve();
@@ -76,19 +104,37 @@ async function main() {
   db.serialize(() => {
     // アカウント
     db.run(`create table if not exists aca(${dbc.TB.ACCOUNT.FIELD});`);
-    console.log(`insert into aca(${dbc.TB.ACCOUNT.FIELD}) values(${myValues(preSetting.account)});`);
-    db.run(`insert into aca(${dbc.TB.ACCOUNT.FIELD}) values(${myValues(preSetting.account)});`);
+    console.log(
+      `insert into aca(${dbc.TB.ACCOUNT.FIELD}) values(${myValues(
+        preSetting.account
+      )});`
+    );
+    db.run(
+      `insert into aca(${dbc.TB.ACCOUNT.FIELD}) values(${myValues(
+        preSetting.account
+      )});`
+    );
     // 予約予定情報
     db.run(`create table if not exists items(${dbc.TB.ITEMS.FIELD});`);
     preSetting.items.forEach((item) => {
-      console.log(`insert into items(${dbc.TB.ITEMS.FIELD}) values(${myValues(item)})`);
-      db.run(`insert into items(${dbc.TB.ITEMS.FIELD}) values(${myValues(item)});`);
+      console.log(
+        `insert into items(${dbc.TB.ITEMS.FIELD}) values(${myValues(item)})`
+      );
+      db.run(
+        `insert into items(${dbc.TB.ITEMS.FIELD}) values(${myValues(item)});`
+      );
     });
     // 予約結果情報
     db.run(`create table if not exists results(${dbc.TB.RESULTS.FIELD});`);
     preResult.items.forEach((item) => {
-      console.log(`insert into results(${dbc.TB.RESULTS.FIELD}) values(${myValues(item)})`);
-      db.run(`insert into results(${dbc.TB.RESULTS.FIELD}) values(${myValues(item)});`);
+      console.log(
+        `insert into results(${dbc.TB.RESULTS.FIELD}) values(${myValues(item)})`
+      );
+      db.run(
+        `insert into results(${dbc.TB.RESULTS.FIELD}) values(${myValues(
+          item
+        )});`
+      );
     });
   });
   // } else {
@@ -110,19 +156,37 @@ async function main() {
   db.serialize(() => {
     // アカウント
     db.run(`create table if not exists aca(${dbc.TB.ACCOUNT.FIELD});`);
-    console.log(`insert into aca(${dbc.TB.ACCOUNT.FIELD}) values(${myValues(preSetting.account)});`);
-    db.run(`insert into aca(${dbc.TB.ACCOUNT.FIELD}) values(${myValues(preSetting.account)});`);
+    console.log(
+      `insert into aca(${dbc.TB.ACCOUNT.FIELD}) values(${myValues(
+        preSetting.account
+      )});`
+    );
+    db.run(
+      `insert into aca(${dbc.TB.ACCOUNT.FIELD}) values(${myValues(
+        preSetting.account
+      )});`
+    );
     // 予約予定情報
     db.run(`create table if not exists items(${dbc.TB.ITEMS.FIELD});`);
     preSetting.items.forEach((item) => {
-      console.log(`insert into items(${dbc.TB.ITEMS.FIELD}) values(${myValues(item)})`);
-      db.run(`insert into items(${dbc.TB.ITEMS.FIELD}) values(${myValues(item)});`);
+      console.log(
+        `insert into items(${dbc.TB.ITEMS.FIELD}) values(${myValues(item)})`
+      );
+      db.run(
+        `insert into items(${dbc.TB.ITEMS.FIELD}) values(${myValues(item)});`
+      );
     });
     // 予約結果情報
     db.run(`create table if not exists results(${dbc.TB.RESULTS.FIELD});`);
     preResult.items.forEach((item) => {
-      console.log(`insert into results(${dbc.TB.RESULTS.FIELD}) values(${myValues(item)})`);
-      db.run(`insert into results(${dbc.TB.RESULTS.FIELD}) values(${myValues(item)});`);
+      console.log(
+        `insert into results(${dbc.TB.RESULTS.FIELD}) values(${myValues(item)})`
+      );
+      db.run(
+        `insert into results(${dbc.TB.RESULTS.FIELD}) values(${myValues(
+          item
+        )});`
+      );
     });
   });
   // } else {
@@ -133,24 +197,80 @@ async function main() {
 async function insert() {
   // ファイルの読み込み
   let dbc = new sqliteDb();
+  const values = require("./insert.json");
   db.serialize(() => {
     // アカウント
-    let sqlstr = `insert into items(${dbc.TB.ITEMS.FIELD}) values('11/20(水)','20241120','2024/11/13','1','05:57','10号車','12D');`;
-    console.log(sqlstr);
-    db.run(sqlstr);
+    // let sqlstr = `insert into items(${dbc.TB.ITEMS.FIELD}) values('11/20(水)','20241120','2024/11/13','1','05:57','10号車','12D');`;
+    // "date": "7/23(sui)",
+    // "date_key": "20250723",
+    // "book_date": "2025/7/21",
+    // "check": true,
+    // "time": "08:40",
+    // "t_num": "1号車",
+    // "s_num": "12D"
+    values?.items?.forEach((val) => {
+      let sqlstr = `insert into items(${dbc.TB.ITEMS.FIELD}) values('${
+        val.date
+      }', '${val.date_key}', '${val.book_date}', '${val.check ? "1" : "0"}', '${
+        val.time
+      }', '${val.t_num}', '${val.s_num}');`;
+      console.log(sqlstr);
+      db.run(sqlstr);
+    });
   });
+}
+async function select() {
+  // ファイルの読み込み
+  let sqlstr = `select * from items order by date DESC limit 10`;
+
+  try {
+    // db.all をコールバック関数ではなくPromiseとして扱うことで、async/awaitと連携させやすくなります
+    const rows = await new Promise((resolve, reject) => {
+      db.all(sqlstr, [], (err, rows) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(rows);
+        }
+      });
+    });
+
+    console.log(`実行されたSQL: ${sqlstr}`);
+    if (rows.length > 0) {
+      console.log("--- 取得結果 ---");
+      rows.forEach((row) => {
+        // 各行のデータをJSON形式で出力するなど、好きな形式で標準出力できます
+        console.log(JSON.stringify(row, null, 2)); // 2はインデントのスペース数
+      });
+    } else {
+      console.log("条件に一致するデータはありませんでした。");
+    }
+  } catch (err) {
+    console.error("クエリ実行エラー:", err.message);
+  } finally {
+    // データベース接続を閉じる
+    db.close((err) => {
+      if (err) {
+        console.error("データベース切断エラー:", err.message);
+      } else {
+        console.log("データベース接続を閉じました。");
+      }
+    });
+  }
 }
 const MODE = "migrate";
 const MODE2 = "insert";
+const MODE3 = "select";
 // console.log(process.argv);
 if (process.argv[1].indexOf("sql.js") > -1) {
   if (process.argv[2] && MODE == process.argv[2]) {
     main();
     // process.exit();
-  } else
-  if (process.argv[2] && MODE2 == process.argv[2]) {
+  } else if (process.argv[2] && MODE2 == process.argv[2]) {
     insert();
     // process.exit();
+  } else if (process.argv[2] && MODE3 == process.argv[2]) {
+    select();
   } else {
     console.log(`引数は、${MODE} だけです！`);
   }

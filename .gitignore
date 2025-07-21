@@ -9,3 +9,6 @@ bin/*
 log/*
 client/build.tar.gz
 data/*
+config/prof/*
+insert.json
+package-lock.json
