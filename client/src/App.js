@@ -119,6 +119,7 @@ function App() {
       let newItem = {
         date: dateStr,
         date_key: dateKey,
+        isHolyday: isHolyday(date),
         book_date: bookDate.toLocaleDateString(),
         check: false,
         ...defoItem,
@@ -147,6 +148,14 @@ function App() {
     let tmpList = [...items];
     tmpList[k][kind] = kind == "check" ? e.target.checked : e.target.value;
     setItems(tmpList);
+  };
+  const isHolyday = (date) => {
+    let sep = "-";
+    const yyyy = date.getFullYear();
+    const mm = ("00" + (date.getMonth() + 1)).slice(-2);
+    const dd = ("00" + date.getDate()).slice(-2);
+    let holydayKey = `${yyyy}${sep}${mm}${sep}${dd}`;
+    return conf?.holyday?.[holydayKey];
   };
   useEffect(() => {
     // conf
@@ -469,8 +478,9 @@ function App() {
                         </div>{" "}
                         <label
                           className="input-group-text border-0 bg-white px-1"
-                          style={{ width: "75px" }}
+                          style={{ width: "75px", color: item.isHolyday ?"red":"" }}
                           htmlFor={"check" + i}
+                          title={item.isHolyday}
                         >
                           {item.date}
                         </label>

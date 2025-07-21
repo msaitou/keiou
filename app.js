@@ -1,6 +1,7 @@
 const express = require("express");
 const fs = require("fs");
 const conf = require("config");
+const holyday = require("./holyday.json");
 const sqliteDb = require("./sql").sqliteDb;
 const db = new sqliteDb();
 const port = 3333;
@@ -41,7 +42,8 @@ app.get("/", async (req, res) => {
 });
 app.get("/conf", async (req, res) => {
   try {
-    res.json({ conf: conf });
+    // "comment": "https://holidays-jp.github.io/api/v1/date.json で取得できた内容。来年また更新が必要",
+    res.json({ conf: {...conf, holyday} });
   } catch (e) {
     logger.warn(e);
     res.json({ err: "エラーが発生しました。もう一度試しても同様の場合、齊藤に連絡してください。" });
