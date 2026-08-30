@@ -177,7 +177,8 @@ class Analyzer extends BaseWebDriverWrapper {
                         `input[id='carNumberBtn${num}']`,
                         `#seatMap${num} td.seat>span:not(.noVacancySeat):not(.notSeat)`,
                         "input#submit",
-                        "ancestor::td[@class='seat']",
+                        // "ancestor::td[@class='seat']",
+                        "ancestor::td[contains(@class, 'seat')]", // <td class="seat ">　に変わった？2026/08/31から
                         "[id$='selectedSeatList']",
                       ];
                       if (num != "10") {
