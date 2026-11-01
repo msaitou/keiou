@@ -43,7 +43,7 @@ class WebCls {
       let setting = preStr;
       if (setting.items && setting.account) {
         let today = new Date();
-        let task = setting.items.filter((it) => it.book_date == today.toLocaleDateString())[0];
+        let task = setting.items.filter((it) => it.book_date == today.toLocaleDateString("ja-JP", { timeZone: "Asia/Tokyo" }))[0];
         logger.info(task);
         if (task) {
           const ana = new Analyzer();
