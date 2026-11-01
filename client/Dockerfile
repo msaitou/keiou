@@ -1,4 +1,4 @@
-FROM node:19.4.0-bullseye-slim
+FROM node:26.13.0-bookworm-slim
  
 # Set the working directory inside the container
 WORKDIR /src

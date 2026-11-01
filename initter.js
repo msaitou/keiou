@@ -1,7 +1,6 @@
 const conf = require("config");
 const fs = require("fs");
 const chrome = require("selenium-webdriver/chrome");
-const req = require("request"); // npm i request adm-zip
 const AdmZip = require("adm-zip");
 const url =
   "https://googlechromelabs.github.io/chrome-for-testing/latest-versions-per-milestone-with-downloads.json";
@@ -227,12 +226,14 @@ const getDownloadUrl = async () => {
 
   try {
     return new Promise((resu, rej) => {
-      req({ url, timeout: 180000 }, async (err, res, body) => {
-        if (err) rej(err);
-        // console.log(res);
-        // let resObj = res.json();
-        // レスポンスコードとHTMLを表示
-        // console.log('body:', JSON.stringify(JSON.parse(body), null, 2));
+      (async () => {
+        let body;
+        try {
+          const r = await fetch(url, { signal: AbortSignal.timeout(180000) });
+          body = await r.text();
+        } catch (err) {
+          return rej(err);
+        }
         let dObj = JSON.parse(body);
         // console.log("resObj:", dObj.milestones, browseVer);
         if (dObj && dObj.milestones[browseVer]) {
@@ -294,7 +295,7 @@ const getDownloadUrl = async () => {
         // console.log("end");
         resu(true);
         // process.exit(1);
-      });
+      })().catch(rej);
     });
   } catch (e) {
     console.log(e);
@@ -309,14 +310,14 @@ const getLocalPlatformKey = () => {
 const downloadDriver = async (url) => {
   return new Promise(async (res, rej) => {
     try {
-      req(url)
-        .pipe(
-          fs.createWriteStream(CHROME.DRIVER.DIR + CHROME.DRIVER.DOWNLOAD_NAME)
-        )
-        .on("close", function () {
-          console.log("ダウンロード完了");
-          res(true);
-        });
+      const r = await fetch(url);
+      if (!r.ok) throw new Error(`download failed: ${r.status}`);
+      fs.writeFileSync(
+        CHROME.DRIVER.DIR + CHROME.DRIVER.DOWNLOAD_NAME,
+        Buffer.from(await r.arrayBuffer())
+      );
+      console.log("ダウンロード完了");
+      res(true);
     } catch (e) {
       rej(e);
     }

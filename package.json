@@ -16,18 +16,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "adm-zip": "^0.5.16",
-    "config": "^3.3.9",
-    "express": "^4.18.2",
-    "log4js": "^6.7.1",
-    "selenium-download": "^2.0.16",
-    "selenium-webdriver": "^4.7.1",
-    "sqlite3": "^5.1.4"
-  },
-  "volta": {
-    "node": "19.4.0"
+    "adm-zip": "^0.6.1",
+    "config": "^5.0.1",
+    "express": "^4.22.3",
+    "log4js": "^6.9.1",
+    "selenium-webdriver": "^4.52.0",
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
-    "concurrently": "^9.2.1"
+    "concurrently": "^10.0.6"
   }
 }
