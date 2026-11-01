@@ -65,7 +65,7 @@ class Analyzer extends BaseWebDriverWrapper {
     this.logger.info(`constructor`);
   }
   async exec(task, account) {
-    this.logger.info("きた？", task, account);
+    this.logger.info("きた？", task);
     let reciptNum = "";
     let fName = "";
     let fNameList = [];
