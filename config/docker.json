@@ -1,0 +1,12 @@
+{
+  "chrome": {
+    "headless": true,
+    "user-data-dir": "/tmp/chrome-profile",
+    "profile": "docker",
+    "bin": "/app/bin/",
+    "browse": "/usr/bin/google-chrome",
+    "args": ["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu"]
+  },
+  "dry_run": true,
+  "start_time": { "h": 0, "m": 0, "s": 0 }
+}

@@ -187,6 +187,8 @@ exports.initBrowserDriver = async function (isMob = false, headless = true) {
       `--proxy-server=http://${conf.proxy.host}:${conf.proxy.port}`
     );
   chromeOptions.addArguments("--lang=en");
+  // コンテナ用の追加引数（--no-sandbox など）
+  if (conf.chrome.args) chromeOptions.addArguments(...conf.chrome.args);
   // if (headless) chromeOptions.addArguments("--headless=new");
   if (headless) chromeOptions.addArguments("--headless");
   let defoSer = null;

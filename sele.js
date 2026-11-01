@@ -89,7 +89,7 @@ class Analyzer extends BaseWebDriverWrapper {
             await inputEle.sendKeys(account.password);
             inputEle = await this.getEle(se[2], 100);
             let startTime = new Date().setHours(conf.start_time.h, conf.start_time.m, conf.start_time.s, 0);
-            for (; i2 === 0 && startTime > new Date(); ) {
+            for (; !conf.dry_run && i2 === 0 && startTime > new Date(); ) {
               await this.sleep(startTime - new Date() > 10000 ? 1000 : 200);
             }
             await this.clickEle(inputEle, 100);
@@ -224,7 +224,7 @@ class Analyzer extends BaseWebDriverWrapper {
                               let el = await this.getEle(se[0], 30000);
                               await this.clickEle(el, 5000); // 同意ボタン
                               if (await this.isExistEle(se[2], true, 30000)) {
-                                // throw("test")
+                                                              if (conf.dry_run) throw "dry_run"; // 決済ボタン押下の手前で止める
                                 let el = await this.getEle(se[2], 30000);
                                 await this.clickEle(el, 5000); // 遷移
                                 if (await this.isExistEle(se[3], true, 30000)) {
@@ -239,7 +239,7 @@ class Analyzer extends BaseWebDriverWrapper {
                                 await el.clear();
                                 await el.sendKeys(account.password); // 確認用のパスワード入力
                                 if (await this.isExistEle(se[2], true, 30000)) {
-                                  // throw("test")
+                                if (conf.dry_run) throw "dry_run"; // 決済ボタン押下の手前で止める
                                   let el = await this.getEle(se[2], 30000);
                                   await this.clickEle(el, 5000); // 遷移
                                   if (await this.isExistEle(se[3], true, 30000)) {
@@ -276,7 +276,7 @@ class Analyzer extends BaseWebDriverWrapper {
             } else throw "照会ボタンが見つからない(2秒以上時間かかった)";
           } else if (i2==2) throw "ログインページ表示されてる？";
         } catch (ee) {
-          if (ee == "既に確保されちゃった！") throw ee; // バブリング
+          if (ee == "既に確保されちゃった！" || ee == "dry_run") throw ee; // バブリング
           fName = await logedErr(this.driver, this.logger, ee);
           fNameList.push(fName);
         }
@@ -292,7 +292,7 @@ class Analyzer extends BaseWebDriverWrapper {
       // let result = JSON.parse(preStr);
       // let result = preStr;
       // result.items = [...result.items, { ...task}];
-      await db.insert("RESULTS", [task]);
+      if (!conf.dry_run) await db.insert("RESULTS", [task]);
       // await fs.writeFileSync("./result.json", JSON.stringify(result));
       await this.quitDriver();
     }

@@ -1,5 +1,4 @@
-# Use the latest LTS version of Node.js
-FROM node:18-alpine
+FROM node:19.4.0-bullseye-slim
  
 # Set the working directory inside the container
 WORKDIR /src
@@ -7,8 +6,7 @@ WORKDIR /src
 # Copy package.json and package-lock.json
 COPY package*.json ./
  
-# Install dependencies
-RUN npm install
+RUN npm ci
  
 # Copy the rest of your application files
 COPY . .

@@ -85,8 +85,13 @@ function App() {
   const createBookable = (data) => {
     let date = new Date();
     let bookDate = new Date();
-    date.setDate(date.getDate() + 7); // 一週間後以降の予約しか興味ない
+    // 開発用(dry_run)は、登録した日(今日)を予約日にし、乗車日も明日以降にして、土日も除外しない
+    const isDev = !!conf.dry_run;
+    const devShift = isDev ? 1 : 0;
+    const todayStr = new Date().toLocaleDateString();
+    date.setDate(date.getDate() + (isDev ? 0 : 7 - devShift)); // 通常は一週間後以降の予約しか興味ない
     date.setHours(0, 0, 0, 0);
+    bookDate.setDate(bookDate.getDate() - devShift);
     bookDate.setHours(0, 0, 0, 0);
     let dateList = [];
     let tmpItems = [];
@@ -95,7 +100,7 @@ function App() {
     for (let i = 0; i < 14; i++) {
       date.setDate(date.getDate() + 1);
       bookDate.setDate(bookDate.getDate() + 1);
-      if ([0, 6].indexOf(date.getDay()) > -1) continue;
+      if (!isDev && [0, 6].indexOf(date.getDay()) > -1) continue;
       let dateKey = getYYYYMMDDStr(date);
       let dateStr = date.toLocaleDateString().substring(5);
       switch (date.getDay()) {
@@ -128,6 +133,7 @@ function App() {
         let saved = data?.items?.filter((it, e) => it.date == dateStr)[0];
         if (saved) newItem = { ...newItem, ...saved };
       }
+      if (isDev) newItem.book_date = todayStr; // 保存済みの予約日も、今日に上書きする
       tmpItems.push(newItem);
     }
     setAccount({ id: data?.account?.id, password: data?.account?.password });

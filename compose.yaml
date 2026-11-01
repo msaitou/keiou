@@ -1,0 +1,38 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3333:3333"
+    volumes:
+      - .:/app
+      - /app/node_modules # Windows用のnode_modulesで上書きされないようにする
+      - /app/bin # chromedriverはコンテナ内で別に取得する
+
+  selenium:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["node", "sele.js"]
+    profiles: ["selenium"]
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/bin
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      # Windowsの共有フォルダでは変更検知が届かないため、ポーリングにする
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+    volumes:
+      - ./client:/src
+      - /src/node_modules
+    depends_on:
+      - api
